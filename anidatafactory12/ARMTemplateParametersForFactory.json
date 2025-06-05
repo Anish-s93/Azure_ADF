@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "anidatafactory12"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage_destination_accountKey": {
+			"value": ""
+		},
+		"SqlServer1_password": {
+			"value": ""
+		},
+		"sqlserver_parameter_password": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://dlstorage09052025.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage_destination_properties_typeProperties_url": {
+			"value": "https://dlstorage09052025.dfs.core.windows.net/"
+		},
+		"SqlServer1_properties_typeProperties_server": {
+			"value": "DESKTOP-SN10APS"
+		},
+		"SqlServer1_properties_typeProperties_database": {
+			"value": "admin"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"value": "sa"
+		},
+		"sqlserver_parameter_properties_typeProperties_server": {
+			"value": "DESKTOP-SN10APS"
+		},
+		"sqlserver_parameter_properties_typeProperties_database": {
+			"value": "@{linkedService().DBName}"
+		},
+		"sqlserver_parameter_properties_typeProperties_userName": {
+			"value": "sa"
+		},
+		"ptrigger_properties_paramerizedpipeline_parameters_Tablenamefrompipeline": {
+			"value": "person"
+		},
+		"ptrigger_properties_paramerizedpipeline_parameters_dbnamefrompipeline": {
+			"value": "AdventureWorks2022"
+		},
+		"ptrigger_properties_paramerizedpipeline_parameters_destinationtable": {
+			"value": "p_person"
+		}
+	}
+}

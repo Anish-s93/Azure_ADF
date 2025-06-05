@@ -1,0 +1,187 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "anidatafactory12"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureDataLakeStorage_destination_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage_destination'"
+		},
+		"SqlServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SqlServer1'"
+		},
+		"sqlserver_parameter_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'sqlserver_parameter'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlstorage09052025.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage_destination_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlstorage09052025.dfs.core.windows.net/"
+		},
+		"SqlServer1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "DESKTOP-SN10APS"
+		},
+		"SqlServer1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "admin"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sa"
+		},
+		"sqlserver_parameter_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "DESKTOP-SN10APS"
+		},
+		"sqlserver_parameter_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().DBName}"
+		},
+		"sqlserver_parameter_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sa"
+		},
+		"ptrigger_properties_paramerizedpipeline_parameters_Tablenamefrompipeline": {
+			"type": "string",
+			"defaultValue": "person"
+		},
+		"ptrigger_properties_paramerizedpipeline_parameters_dbnamefrompipeline": {
+			"type": "string",
+			"defaultValue": "AdventureWorks2022"
+		},
+		"ptrigger_properties_paramerizedpipeline_parameters_destinationtable": {
+			"type": "string",
+			"defaultValue": "p_person"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "anidatafactory12_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
+					"AzureDataLakeStorage_destination_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage_destination_accountKey')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					},
+					"AzureDataLakeStorage_destination_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage_destination_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "anidatafactory12_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"SqlServer1_password": {
+						"value": "[parameters('SqlServer1_password')]"
+					},
+					"sqlserver_parameter_password": {
+						"value": "[parameters('sqlserver_parameter_password')]"
+					},
+					"SqlServer1_properties_typeProperties_server": {
+						"value": "[parameters('SqlServer1_properties_typeProperties_server')]"
+					},
+					"SqlServer1_properties_typeProperties_database": {
+						"value": "[parameters('SqlServer1_properties_typeProperties_database')]"
+					},
+					"SqlServer1_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
+					},
+					"sqlserver_parameter_properties_typeProperties_server": {
+						"value": "[parameters('sqlserver_parameter_properties_typeProperties_server')]"
+					},
+					"sqlserver_parameter_properties_typeProperties_database": {
+						"value": "[parameters('sqlserver_parameter_properties_typeProperties_database')]"
+					},
+					"sqlserver_parameter_properties_typeProperties_userName": {
+						"value": "[parameters('sqlserver_parameter_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'anidatafactory12_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "anidatafactory12_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ptrigger_properties_paramerizedpipeline_parameters_Tablenamefrompipeline": {
+						"value": "[parameters('ptrigger_properties_paramerizedpipeline_parameters_Tablenamefrompipeline')]"
+					},
+					"ptrigger_properties_paramerizedpipeline_parameters_dbnamefrompipeline": {
+						"value": "[parameters('ptrigger_properties_paramerizedpipeline_parameters_dbnamefrompipeline')]"
+					},
+					"ptrigger_properties_paramerizedpipeline_parameters_destinationtable": {
+						"value": "[parameters('ptrigger_properties_paramerizedpipeline_parameters_destinationtable')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'anidatafactory12_ArmTemplate_1')]"
+			]
+		}
+	]
+}
