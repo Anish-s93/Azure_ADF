@@ -1,5 +1,13 @@
 {
 	"name": "anidatafactory12",
+	"properties": {
+		"globalParameters": {
+			"Root": {
+				"type": "string",
+				"value": "dlstorage09052025/storagecontainer"
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
