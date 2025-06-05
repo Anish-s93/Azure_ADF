@@ -13,6 +13,114 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalSplit')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "EmpDataset",
+								"type": "DatasetReference"
+							},
+							"name": "EmpData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DestinationDS",
+								"type": "DatasetReference"
+							},
+							"name": "Dep100"
+						},
+						{
+							"dataset": {
+								"referenceName": "DestinationDS",
+								"type": "DatasetReference"
+							},
+							"name": "Dep50"
+						},
+						{
+							"dataset": {
+								"referenceName": "DestinationDS",
+								"type": "DatasetReference"
+							},
+							"name": "OtherDeparments"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Splitbasedondepartment"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as string,",
+						"          FIRST_NAME as string,",
+						"          LAST_NAME as string,",
+						"          EMAIL as string,",
+						"          PHONE_NUMBER as string,",
+						"          HIRE_DATE as string,",
+						"          JOB_ID as string,",
+						"          SALARY as string,",
+						"          COMMISSION_PCT as string,",
+						"          MANAGER_ID as string,",
+						"          DEPARTMENT_ID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> EmpData",
+						"EmpData split(equals(DEPARTMENT_ID, '100'),",
+						"     equals(DEPARTMENT_ID,'50'),",
+						"     disjoint: false) ~> Splitbasedondepartment@(Dep100, Dep50, Others)",
+						"Splitbasedondepartment@Dep100 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          DEPARTMENT_ID as string,",
+						"          TotalEmployees as string",
+						"     ),",
+						"     partitionFileNames:['Department100'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> Dep100",
+						"Splitbasedondepartment@Dep50 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          DEPARTMENT_ID as string,",
+						"          TotalEmployees as string",
+						"     ),",
+						"     partitionFileNames:['Department50'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> Dep50",
+						"Splitbasedondepartment@Others sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          DEPARTMENT_ID as string,",
+						"          TotalEmployees as string",
+						"     ),",
+						"     partitionFileNames:['OtherDeparments'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> OtherDeparments"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DerivedColumn')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1099,110 +1207,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CacheSink')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "AzureSqlTable1",
-								"type": "DatasetReference"
-							},
-							"name": "emptable"
-						},
-						{
-							"dataset": {
-								"referenceName": "EmployeesCache",
-								"type": "DatasetReference"
-							},
-							"name": "EmpFile"
-						}
-					],
-					"sinks": [
-						{
-							"name": "CachedMaxid"
-						},
-						{
-							"dataset": {
-								"referenceName": "AzureSqlTable1",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "surrogateKey1"
-						},
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          maxEmpId as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     query: 'select max(emp_id) as maxEmpId from emp',",
-						"     format: 'query') ~> emptable",
-						"source(output(",
-						"          empname as string,",
-						"          gender as string,",
-						"          country as string,",
-						"          salary as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> EmpFile",
-						"EmpFile keyGenerate(output(emp_id as long),",
-						"     startAt: 1L,",
-						"     stepValue: 1L) ~> surrogateKey1",
-						"surrogateKey1 derive(emp_id = emp_id+CachedMaxid#outputs()[1].maxEmpId) ~> derivedColumn1",
-						"emptable sink(validateSchema: false,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     store: 'cache',",
-						"     format: 'inline',",
-						"     output: false,",
-						"     saveOrder: 1,",
-						"     mapColumn(",
-						"          maxEmpId",
-						"     )) ~> CachedMaxid",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          emp_id as integer,",
-						"          empname as string,",
-						"          gender as string,",
-						"          country as string,",
-						"          salary as integer",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          emp_id,",
-						"          empname,",
-						"          gender,",
-						"          country,",
-						"          salary",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Aggregatepipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1292,7 +1296,9 @@
 				"annotations": [],
 				"lastPublishTime": "2025-05-31T15:44:21Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/ConditionalSplit')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Derived Column')]",

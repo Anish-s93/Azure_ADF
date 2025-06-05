@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage_destination'"
 		},
+		"AzureSqlDatabase_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase'"
+		},
 		"SqlServer1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SqlServer1'"
@@ -23,10 +27,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'sqlserver_parameter'"
 		},
-		"AzureSqlDatabase_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'AzureSqlDatabase'"
-		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlstorage09052025.dfs.core.windows.net/"
@@ -34,6 +34,18 @@
 		"AzureDataLakeStorage_destination_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlstorage09052025.dfs.core.windows.net/"
+		},
+		"AzureSqlDatabase_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "anisqlserver1.database.windows.net"
+		},
+		"AzureSqlDatabase_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "anisqldb"
+		},
+		"AzureSqlDatabase_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladmin"
 		},
 		"SqlServer1_properties_typeProperties_server": {
 			"type": "string",
@@ -70,18 +82,6 @@
 		"ptrigger_properties_paramerizedpipeline_parameters_destinationtable": {
 			"type": "string",
 			"defaultValue": "p_person"
-		},
-		"AzureSqlDatabase_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "anisqlserver1.database.windows.net"
-		},
-		"AzureSqlDatabase_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "anisqldb"
-		},
-		"AzureSqlDatabase_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "sqladmin"
 		},
 		"containerUri": {
 			"type": "string",

@@ -11,13 +11,13 @@
 		"AzureDataLakeStorage_destination_accountKey": {
 			"value": ""
 		},
+		"AzureSqlDatabase_password": {
+			"value": ""
+		},
 		"SqlServer1_password": {
 			"value": ""
 		},
 		"sqlserver_parameter_password": {
-			"value": ""
-		},
-		"AzureSqlDatabase_password": {
 			"value": ""
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
@@ -25,6 +25,15 @@
 		},
 		"AzureDataLakeStorage_destination_properties_typeProperties_url": {
 			"value": "https://dlstorage09052025.dfs.core.windows.net/"
+		},
+		"AzureSqlDatabase_properties_typeProperties_server": {
+			"value": "anisqlserver1.database.windows.net"
+		},
+		"AzureSqlDatabase_properties_typeProperties_database": {
+			"value": "anisqldb"
+		},
+		"AzureSqlDatabase_properties_typeProperties_userName": {
+			"value": "sqladmin"
 		},
 		"SqlServer1_properties_typeProperties_server": {
 			"value": "DESKTOP-SN10APS"
@@ -52,15 +61,6 @@
 		},
 		"ptrigger_properties_paramerizedpipeline_parameters_destinationtable": {
 			"value": "p_person"
-		},
-		"AzureSqlDatabase_properties_typeProperties_server": {
-			"value": "anisqlserver1.database.windows.net"
-		},
-		"AzureSqlDatabase_properties_typeProperties_database": {
-			"value": "anisqldb"
-		},
-		"AzureSqlDatabase_properties_typeProperties_userName": {
-			"value": "sqladmin"
 		},
 		"containerUri": {
 			"value": ""

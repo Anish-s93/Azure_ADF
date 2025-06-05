@@ -162,6 +162,28 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabase_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabase_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabase_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabase_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/tumbling_trigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -195,26 +217,48 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
 				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"server": "[parameters('AzureSqlDatabase_properties_typeProperties_server')]",
-					"database": "[parameters('AzureSqlDatabase_properties_typeProperties_database')]",
-					"encrypt": "mandatory",
-					"trustServerCertificate": false,
-					"authenticationType": "SQL",
-					"userName": "[parameters('AzureSqlDatabase_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('AzureSqlDatabase_password')]"
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "emp_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "empname",
+						"type": "varchar"
+					},
+					{
+						"name": "gender",
+						"type": "varchar"
+					},
+					{
+						"name": "country",
+						"type": "varchar"
+					},
+					{
+						"name": "salary",
+						"type": "int",
+						"precision": 10
 					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "emp"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DSForUnpivot')]",
@@ -802,7 +846,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/OtherEmpDS')]",
+			"name": "[concat(parameters('factoryName'), '/EmployeesCache')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -815,7 +859,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "OtherDeparments.csv",
+						"fileName": "emp_details.csv",
 						"fileSystem": "storagecontainer"
 					},
 					"columnDelimiter": ",",
@@ -825,126 +869,25 @@
 				},
 				"schema": [
 					{
-						"name": "EMPLOYEE_ID",
+						"name": "empname",
 						"type": "String"
 					},
 					{
-						"name": "FIRST_NAME",
+						"name": "gender",
 						"type": "String"
 					},
 					{
-						"name": "LAST_NAME",
+						"name": "country",
 						"type": "String"
 					},
 					{
-						"name": "EMAIL",
-						"type": "String"
-					},
-					{
-						"name": "PHONE_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "HIRE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "JOB_ID",
-						"type": "String"
-					},
-					{
-						"name": "SALARY",
-						"type": "String"
-					},
-					{
-						"name": "COMMISSION_PCT",
-						"type": "String"
-					},
-					{
-						"name": "MANAGER_ID",
-						"type": "String"
-					},
-					{
-						"name": "DEPARTMENT_ID",
+						"name": "salary",
 						"type": "String"
 					}
 				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OuputSampleDS')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage_destination",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "output1",
-						"fileSystem": "destcontainer"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "EMPLOYEE_ID",
-						"type": "String"
-					},
-					{
-						"name": "FIRST_NAME",
-						"type": "String"
-					},
-					{
-						"name": "LAST_NAME",
-						"type": "String"
-					},
-					{
-						"name": "EMAIL",
-						"type": "String"
-					},
-					{
-						"name": "PHONE_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "HIRE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "JOB_ID",
-						"type": "String"
-					},
-					{
-						"name": "SALARY",
-						"type": "String"
-					},
-					{
-						"name": "COMMISSION_PCT",
-						"type": "String"
-					},
-					{
-						"name": "MANAGER_ID",
-						"type": "String"
-					},
-					{
-						"name": "DEPARTMENT_ID",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage_destination')]"
 			]
 		}
 	]
