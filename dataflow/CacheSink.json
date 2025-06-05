@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "EmpFile"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTablecountry",
+						"type": "DatasetReference"
+					},
+					"name": "countrydetails"
 				}
 			],
 			"sinks": [
@@ -29,6 +36,9 @@
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
+				},
+				{
+					"name": "CachedCountries"
 				}
 			],
 			"transformations": [
@@ -57,10 +67,19 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> EmpFile",
+				"source(output(",
+				"          code as string,",
+				"          countryname as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> countrydetails",
 				"EmpFile keyGenerate(output(emp_id as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 derive(emp_id = emp_id+CachedMaxid#outputs()[1].maxEmpId) ~> derivedColumn1",
+				"surrogateKey1 derive(emp_id = emp_id+CachedMaxid#outputs()[1].maxEmpId,",
+				"          country = CachedCountries#lookup(country)) ~> derivedColumn1",
 				"emptable sink(validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
@@ -94,7 +113,19 @@
 				"          gender,",
 				"          country,",
 				"          salary",
-				"     )) ~> sink1"
+				"     )) ~> sink1",
+				"countrydetails sink(validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     keys:[(code)],",
+				"     store: 'cache',",
+				"     format: 'inline',",
+				"     output: false,",
+				"     saveOrder: 1,",
+				"     mapColumn(",
+				"          code,",
+				"          countryname",
+				"     )) ~> CachedCountries"
 			]
 		}
 	}
