@@ -1,1 +1,6 @@
-{}
+{
+	"Root": {
+		"type": "string",
+		"value": "dlstorage09052025/storagecontainer"
+	}
+}
