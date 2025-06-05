@@ -1,0 +1,9 @@
+{
+	"name": "anidatafactory12",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8a541077-c636-498c-a000-ef1da1d12590",
+		"tenantId": "c48ece5f-5da3-4218-ba4c-ac05e39adaab"
+	}
+}

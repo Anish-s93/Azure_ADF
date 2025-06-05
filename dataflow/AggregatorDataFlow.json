@@ -1,0 +1,73 @@
+{
+	"name": "AggregatorDataFlow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "EmpDataset",
+						"type": "DatasetReference"
+					},
+					"name": "Empdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "OuputSampleDS",
+						"type": "DatasetReference"
+					},
+					"name": "destination"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregateondepartments"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPLOYEE_ID as string,",
+				"          FIRST_NAME as string,",
+				"          LAST_NAME as string,",
+				"          EMAIL as string,",
+				"          PHONE_NUMBER as string,",
+				"          HIRE_DATE as string,",
+				"          JOB_ID as string,",
+				"          SALARY as string,",
+				"          COMMISSION_PCT as string,",
+				"          MANAGER_ID as string,",
+				"          DEPARTMENT_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Empdata",
+				"Empdata aggregate(groupBy(DEPARTMENT_ID),",
+				"     TotalEmployees = count(EMPLOYEE_ID)) ~> aggregateondepartments",
+				"aggregateondepartments sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EMPLOYEE_ID as string,",
+				"          FIRST_NAME as string,",
+				"          LAST_NAME as string,",
+				"          EMAIL as string,",
+				"          PHONE_NUMBER as string,",
+				"          HIRE_DATE as string,",
+				"          JOB_ID as string,",
+				"          SALARY as string,",
+				"          COMMISSION_PCT as string,",
+				"          MANAGER_ID as string,",
+				"          DEPARTMENT_ID as string",
+				"     ),",
+				"     partitionFileNames:['Employees_summary_data_depart.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> destination"
+			]
+		}
+	}
+}

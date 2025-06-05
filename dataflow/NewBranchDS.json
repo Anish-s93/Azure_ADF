@@ -1,0 +1,112 @@
+{
+	"name": "NewBranchDS",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "EmpDataset",
+						"type": "DatasetReference"
+					},
+					"name": "EmpDS"
+				},
+				{
+					"dataset": {
+						"referenceName": "DepartmentDS",
+						"type": "DatasetReference"
+					},
+					"name": "DepartmentDS"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DestinationDS",
+						"type": "DatasetReference"
+					},
+					"name": "TotalDepcountSink"
+				},
+				{
+					"dataset": {
+						"referenceName": "DestinationDS",
+						"type": "DatasetReference"
+					},
+					"name": "Jointogetdepname"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Aggregator"
+				},
+				{
+					"name": "join1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPLOYEE_ID as string,",
+				"          FIRST_NAME as string,",
+				"          LAST_NAME as string,",
+				"          EMAIL as string,",
+				"          PHONE_NUMBER as string,",
+				"          HIRE_DATE as string,",
+				"          JOB_ID as string,",
+				"          SALARY as string,",
+				"          COMMISSION_PCT as string,",
+				"          MANAGER_ID as string,",
+				"          DEPARTMENT_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> EmpDS",
+				"source(output(",
+				"          DEPARTMENT_ID as string,",
+				"          DEPARTMENT_NAME as string,",
+				"          MANAGER_ID as string,",
+				"          LOCATION_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> DepartmentDS",
+				"EmpDS aggregate(groupBy(DEPARTMENT_ID),",
+				"     TotalEmployees = count(EMPLOYEE_ID)) ~> Aggregator",
+				"EmpDS, DepartmentDS join(EmpDS@DEPARTMENT_ID == DepartmentDS@DEPARTMENT_ID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"Aggregator sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          DEPARTMENT_ID as string,",
+				"          TotalEmployees as string",
+				"     ),",
+				"     partitionFileNames:['Total_Emp_byDepartments.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          DEPARTMENT_ID,",
+				"          TotalEmployees",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> TotalDepcountSink",
+				"join1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          DEPARTMENT_ID as string,",
+				"          TotalEmployees as string",
+				"     ),",
+				"     partitionFileNames:['EmpDEtailswithDepartment_name.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> Jointogetdepname"
+			]
+		}
+	}
+}

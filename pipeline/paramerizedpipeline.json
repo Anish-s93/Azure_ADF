@@ -1,0 +1,87 @@
+{
+	"name": "paramerizedpipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "copydata_parametrized",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SqlServerdataset_P",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": {
+								"value": "@pipeline().parameters.Tablenamefrompipeline",
+								"type": "Expression"
+							},
+							"DBNamedbcope": {
+								"value": "@pipeline().parameters.dbnamefrompipeline",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SqlServerdataset_P",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": {
+								"value": "@pipeline().parameters.destinationtable",
+								"type": "Expression"
+							},
+							"DBNamedbcope": {
+								"value": "@pipeline().parameters.dbnamefrompipeline",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"Tablenamefrompipeline": {
+				"type": "string"
+			},
+			"dbnamefrompipeline": {
+				"type": "string"
+			},
+			"destinationtable": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-05-25T19:54:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

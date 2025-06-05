@@ -1,0 +1,29 @@
+{
+	"name": "ptrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "paramerizedpipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Tablenamefrompipeline": "person",
+					"dbnamefrompipeline": "AdventureWorks2022",
+					"destinationtable": "p_person"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2025-05-26T10:51:00",
+				"timeZone": "Arab Standard Time"
+			}
+		}
+	}
+}
