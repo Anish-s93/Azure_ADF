@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable1",
+	"name": "AzureEmpDS",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase",
@@ -9,26 +9,21 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "emp_id",
+				"name": "empId",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "empname",
-				"type": "varchar"
+				"name": "empName",
+				"type": "nvarchar"
 			},
 			{
-				"name": "gender",
-				"type": "varchar"
+				"name": "skills",
+				"type": "nvarchar"
 			},
 			{
-				"name": "country",
-				"type": "varchar"
-			},
-			{
-				"name": "salary",
-				"type": "int",
-				"precision": 10
+				"name": "address",
+				"type": "nvarchar"
 			}
 		],
 		"typeProperties": {
