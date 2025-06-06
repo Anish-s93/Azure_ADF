@@ -26,6 +26,9 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -50,7 +53,9 @@
 				"EmpSource, department assert(expectTrue(!isNull(toDate(DOJ, 'yyyyMMdd')), false, 'assertDOJ', null, 'Here we are checking doj'),",
 				"     expectUnique(empid, false, 'assertEmpid', null, 'Checking for unique values'),",
 				"     expectExists(department == depid, false, 'Assertexists')) ~> assert1",
-				"assert1 derive(isInvalidDeparment = hasError('Assertexists')) ~> derivedColumn1"
+				"assert1 derive(isInvalidDeparment = hasError('Assertexists'),",
+				"          isError = isError()) ~> derivedColumn1",
+				"derivedColumn1 filter(isError==false()) ~> filter1"
 			]
 		}
 	}
