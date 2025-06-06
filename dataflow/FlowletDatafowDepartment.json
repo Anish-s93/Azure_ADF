@@ -1,0 +1,58 @@
+{
+	"name": "FlowletDatafowDepartment",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AssertDSdepartments",
+						"type": "DatasetReference"
+					},
+					"name": "depsource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AssertDSdepartments",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          depid as string,",
+				"          depname as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> depsource",
+				"depsource aggregate(groupBy(depid,",
+				"          depname),",
+				"     count = count()) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          depid as string,",
+				"          depname as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          depid,",
+				"          depname",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
