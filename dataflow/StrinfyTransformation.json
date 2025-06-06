@@ -1,5 +1,5 @@
 {
-	"name": "dataflow2",
+	"name": "StrinfyTransformation",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
