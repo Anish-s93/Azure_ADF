@@ -1,0 +1,62 @@
+{
+	"name": "duplicateDepartment",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DepartmentFlowlet",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DestinationDS",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flowlet1",
+					"flowlet": {
+						"referenceName": "flowletDS1",
+						"type": "DataFlowReference"
+					}
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          depid as integer,",
+				"          depname as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 compose(mapColumn(",
+				"          depid,",
+				"          depname",
+				"     ),",
+				"     composition: 'flowletDS1') ~> flowlet1@(output1)",
+				"flowlet1@output1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          DEPARTMENT_ID as string,",
+				"          TotalEmployees as string",
+				"     ),",
+				"     partitionFileNames:['Remove_duplicates.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}
