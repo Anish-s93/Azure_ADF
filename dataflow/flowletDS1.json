@@ -10,9 +10,6 @@
 					"name": "aggregate1"
 				},
 				{
-					"name": "filter1"
-				},
-				{
 					"name": "input1"
 				},
 				{
@@ -29,8 +26,7 @@
 				"input1 aggregate(groupBy(depname,",
 				"          depid),",
 				"     Depcount = count()) ~> aggregate1",
-				"aggregate1 filter(Depcount==1) ~> filter1",
-				"filter1 output(mapColumn(",
+				"aggregate1 output(mapColumn(",
 				"          depname,",
 				"          depid",
 				"     )) ~> output1"
