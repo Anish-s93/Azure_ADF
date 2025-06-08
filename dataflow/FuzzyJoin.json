@@ -1,0 +1,53 @@
+{
+	"name": "FuzzyJoin",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Sales1DS",
+						"type": "DatasetReference"
+					},
+					"name": "Sales1"
+				},
+				{
+					"dataset": {
+						"referenceName": "Sales2DS",
+						"type": "DatasetReference"
+					},
+					"name": "Sales2"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "join1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Custname as string,",
+				"          items as string,",
+				"          quantity as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Sales1",
+				"source(output(",
+				"          Custname as string,",
+				"          items as string,",
+				"          quantity as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Sales2",
+				"Sales1, Sales2 join(fuzzyCompare(Sales1@Custname, Sales2@Custname, 79.00),",
+				"     joinType:'inner',",
+				"     matchType:'fuzzy',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'off')~> join1"
+			]
+		}
+	}
+}
