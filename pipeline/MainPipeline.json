@@ -44,7 +44,11 @@
 				"typeProperties": {
 					"scripts": [
 						{
-							"type": "Query"
+							"type": "Query",
+							"text": {
+								"value": "insert into dbo.tbl_logging values('@{activity('pipelineReturnValue').output.properties.returnValue.pipelineName}','@{activity('pipelineReturnValue').output.properties.returnValue.run.id}'\n)",
+								"type": "Expression"
+							}
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
