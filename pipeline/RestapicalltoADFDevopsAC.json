@@ -1,0 +1,29 @@
+{
+	"name": "RestapicalltoADFDevopsAC",
+	"properties": {
+		"activities": [
+			{
+				"name": "RestAPI_CAll_to_AniDataFactoryDevops",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://management.azure.com/subscriptions/9cf16134-98ea-4288-96cf-510a99b6f450/resourceGroups/anidatafactory12/providers/Microsoft.DataFactory/factories/anidatafactoryDevops/pipelines/demopl/createRun?api-version=2018-06-01",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com/"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
